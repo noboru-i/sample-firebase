@@ -19,4 +19,4 @@ If you want to try it in a bworser, open this [link](http://localhost:5001/sampl
 
 ### If you want to use `firebase-tools` command directly.
 
-Use `npm firebase <any arguments>`.
+Use `npx firebase <any arguments>`.
