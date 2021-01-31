@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import fetch from 'node-fetch';
 
 admin.initializeApp();
 console.log('hello admin.initializeApp');
@@ -34,4 +35,26 @@ export const makeUppercase = functions.firestore.document('/messages/{documentId
   // writing to Cloud Firestore.
   // Setting an 'uppercase' field in Cloud Firestore document returns a Promise.
   return snap.ref.set({uppercase}, {merge: true});
+});
+
+export const testGraphQL = functions.https.onRequest(async (req, res) => {
+  await fetch('https://graphql.anilist.co/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({query: `query {
+      SiteStatistics {
+        users {
+          pageInfo {
+            total
+          }
+        }
+      }
+    }`})
+  })
+    .then(r => r.json())
+    .then(data => console.log('data returned:', data.data.SiteStatistics.users.pageInfo.total));
+  res.json({"success": true});
 });
